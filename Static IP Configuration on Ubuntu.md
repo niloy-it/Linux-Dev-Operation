@@ -1,82 +1,86 @@
-# Configure Static IP on Ubuntu
 
-Step-by-Step Guide
+# Configuring a Static IP on Ubuntu
 
-**1. Identify the Network Interface**
-```
+To set a static IP on Ubuntu, you'll modify network configuration files using **Netplan**. Follow the steps below for a comprehensive guide.
+
+## Step-by-Step Guide
+
+### 1. **Identify Your Network Interface**
+Open the terminal and list your network interfaces to find the one you want to configure:
+```bash
 ip a
 ```
-Look for the interface name (e.g., `eth0`, `enp3s0`, `wlp2s0`, etc.). You’ll need this for configuring the static IP.
+Note the name of the network interface (e.g., `eth0`, `enp3s0`, `wlp2s0`).
 
-**2.Locate the Netplan Configuration File**
-
-- YList the configuration files in the Netplan directory:.
-
-```
+### 2. **Locate the Netplan Configuration File**
+List the configuration files in the Netplan directory:
+```bash
 ls /etc/netplan/
 ```
-- You will see a file like `01-netcfg.yaml` or `50-cloud-init.yaml`
+You should see a file such as `01-netcfg.yaml` or `50-cloud-init.yaml`. This is the file you need to modify.
 
-**3. Backup the Original Configuration**
-  - It's a good idea to create a backup before making any changes:
-```
+### 3. **Backup the Original Configuration**
+It's a good idea to create a backup before making any changes:
+```bash
 sudo cp /etc/netplan/01-netcfg.yaml /etc/netplan/01-netcfg.yaml.bak
-
 ```
 
-
-
-
-
-
-
-
-
-
-**Modify the YAML File for Static IP**
-- `open the file for editing`
+### 4. **Edit the Netplan Configuration File**
+Open the Netplan configuration file with an editor:
+```bash
+sudo nano /etc/netplan/01-netcfg.yaml
 ```
-sudo vim /etc/netplan/01-netcfg.yaml
-```
-```
+
+Replace or add the following content in the file:
+```yaml
 network:
   version: 2
-  renderer: networkd
+  renderer: networkd  # Use networkd or NetworkManager depending on your setup
   ethernets:
-    enp3s0:  # Your network interface name
-      dhcp4: no  # Disable DHCP
+    enp3s0:  # Replace with your network interface name
+      dhcp4: no  # Disable DHCP to use a static IP
       addresses:
-        - 192.168.1.100/24  # Set your static IP address
-      gateway4: 192.168.1.1  # Set your gateway
+        - 192.168.1.150/24  # Replace with your desired static IP
+      gateway4: 192.168.1.1  # Replace with your network's gateway
       nameservers:
         addresses:
-          - 8.8.8.8  # Google's DNS
-          - 8.8.4.4  # Alternate DNS
+          - 8.8.8.8  # Primary DNS (Google's DNS)
+          - 1.1.1.1  # Secondary DNS (Cloudflare's DNS)
 ```
-**3.Apply the Changes**
-```
+
+### 5. **Apply the Configuration**
+Save your changes and apply the new configuration:
+```bash
 sudo netplan apply
 ```
-**4.Verify the Static IP**
-
+If you want to test the configuration temporarily before fully applying it, use:
+```bash
+sudo netplan try
 ```
+
+### 6. **Verify the Static IP**
+Check if the changes have taken effect:
+```bash
 ip a
-ping 192.168.1.1
 ```
-**5.Revert to DHCP (if needed):** If the static IP configuration doesn't work and you need to revert back to DHCP, just set `dhcp4: yes` in the YAML file, like this:
+Test network connectivity to ensure everything is functioning:
+```bash
+ping -c 4 192.168.1.1  # Replace with your gateway or any reliable IP
+```
 
-```
-enp3s0:
+### 7. **Revert to DHCP (if needed)**
+If the static IP setup does not work or causes issues, revert to DHCP by modifying the configuration:
+```yaml
+enp3s0:  # Replace with your network interface name
   dhcp4: yes
 ```
-- Then apply the changes again:
-
-```
+Reapply the changes:
+```bash
 sudo netplan apply
 ```
-> Notes
 
-- `ethernets:` The block defines settings for a specific Ethernet interface. Replace `enp3s0` with your actual network interface name.
-- `addresses:` The static IP address you want to assign, including the subnet mask (in CIDR notation). For example, `/24` represents a subnet mask of `255.255.255.0`.
-- `gateway4:` The IP address of your gateway (usually the IP of your router).
-- `nameservers:` The DNS servers to use (Google’s DNS in this example: `8.8.8.8` and `8.8.4.4`).
+## Notes:
+- **`ethernets` block**: Defines the settings for specific Ethernet interfaces. Replace `enp3s0` with your network interface name.
+- **`addresses`**: Specify the static IP address along with the subnet mask in CIDR notation (e.g., `/24` for `255.255.255.0`).
+- **`gateway4`**: The IP address of your gateway, often your router’s IP.
+- **`nameservers`**: A list of DNS servers to use; the example includes Google’s and Cloudflare's DNS.
