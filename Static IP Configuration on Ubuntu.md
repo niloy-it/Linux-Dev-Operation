@@ -1,4 +1,4 @@
-
+In recent versions of Ubuntu (starting from Ubuntu 20.04 and later), the network configuration has shifted from using the traditional 50-cloud-init.yaml or 01-netcfg.yaml files to a new configuration file called 00-installer-config.yaml. 
 # Configuring a Static IP on Ubuntu
 
 To set a static IP on Ubuntu, you'll modify network configuration files using **Netplan**. Follow the steps below for a comprehensive guide.
