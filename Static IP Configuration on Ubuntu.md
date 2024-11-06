@@ -22,30 +22,27 @@ You should see a file such as `01-netcfg.yaml` or `50-cloud-init.yaml`. This is 
 ### 3. **Backup the Original Configuration**
 It's a good idea to create a backup before making any changes:
 ```bash
-sudo cp /etc/netplan/01-netcfg.yaml /etc/netplan/01-netcfg.yaml.bak
+sudo cp /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.backup
 ```
 
 ### 4. **Edit the Netplan Configuration File**
 Open the Netplan configuration file with an editor:
 ```bash
-sudo nano /etc/netplan/01-netcfg.yaml
+sudo vim /etc/netplan/00-installer-config.yaml
 ```
 
 Replace or add the following content in the file:
 ```yaml
 network:
-  version: 2
-  renderer: networkd  # Use networkd or NetworkManager depending on your setup
   ethernets:
-    enp3s0:  # Replace with your network interface name
-      dhcp4: no  # Disable DHCP to use a static IP
+    eth0:
+      dhcp4: false
       addresses:
-        - 192.168.1.150/24  # Replace with your desired static IP
-      gateway4: 192.168.1.1  # Replace with your network's gateway
-      nameservers:
-        addresses:
-          - 8.8.8.8  # Primary DNS (Google's DNS)
-          - 1.1.1.1  # Secondary DNS (Cloudflare's DNS)
+        - 172.26.137.116/20
+      routes:
+        - to: 0.0.0.0/0
+          via: 172.26.128.1
+  version: 2
 ```
 
 ### 5. **Apply the Configuration**
