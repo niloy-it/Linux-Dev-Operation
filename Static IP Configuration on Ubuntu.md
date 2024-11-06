@@ -1,4 +1,4 @@
-In recent versions of Ubuntu (starting from Ubuntu 20.04 and later), the network configuration has shifted from using the traditional 50-cloud-init.yaml or 01-netcfg.yaml files to a new configuration file called 00-installer-config.yaml. 
+
 # Configuring a Static IP on Ubuntu
 
 To set a static IP on Ubuntu, you'll modify network configuration files using **Netplan**. Follow the steps below for a comprehensive guide.
@@ -17,7 +17,7 @@ List the configuration files in the Netplan directory:
 ```bash
 ls /etc/netplan/
 ```
-You should see a file such as `01-netcfg.yaml` or `50-cloud-init.yaml`. This is the file you need to modify.
+In recent versions of Ubuntu (starting from Ubuntu 20.04 and later), the network configuration has shifted from using the traditional 50-cloud-init.yaml or 01-netcfg.yaml files to a new configuration file called 00-installer-config.yaml. 
 
 ### 3. **Backup the Original Configuration**
 It's a good idea to create a backup before making any changes:
@@ -41,7 +41,7 @@ network:
         - 172.26.137.116/20
       routes:
         - to: 0.0.0.0/0
-          via: 172.26.128.1
+          via:  172.26.128.1
   version: 2
 ```
 
@@ -50,21 +50,12 @@ Save your changes and apply the new configuration:
 ```bash
 sudo netplan apply
 ```
-If you want to test the configuration temporarily before fully applying it, use:
-```bash
-sudo netplan try
-```
 
 ### 6. **Verify the Static IP**
 Check if the changes have taken effect:
 ```bash
 ip a
 ```
-Test network connectivity to ensure everything is functioning:
-```bash
-ping -c 4 192.168.1.1  # Replace with your gateway or any reliable IP
-```
-
 ### 7. **Revert to DHCP (if needed)**
 If the static IP setup does not work or causes issues, revert to DHCP by modifying the configuration:
 ```yaml
