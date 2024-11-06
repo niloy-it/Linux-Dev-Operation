@@ -1,3 +1,15 @@
+# Steps 1: Install SSH on Ubuntu
+**Command**
+```bash
+sudo apt update
+sudo apt install openssh-server
+```
+# Steps 2: Start and Enable SSH Service
+**Command**
+```bash
+sudo systemctl status ssh
+sudo systemctl enable --now ssh
+```
 
 # SSH Cheat Sheet  
 *Essential Commands for SSH Connections, File Transfers, Port Forwarding, and Automation*
