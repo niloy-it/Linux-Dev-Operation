@@ -15,13 +15,7 @@
 SSH is a network protocol that provides a secure connection between a client and a server. All communication is encrypted, preventing theft of data transmitted over the network and other remote network attacks.
 Commonly used in UNIX-like systems, SSH servers authenticate users and ensure secure communication.
 
-## SSH Architecture
-SSH relies on the public-key cryptography to authenticate the remote system and allow it to authenticate the user trying to connect on it. SSH works on three hierarchical layers.
-<p align="center">
-  <img src="./image/ssh_connection_init.png" alt="SSH Connection Initialization" title="SSH Connection Initialization" height="500" width="850"/>
-  <br/>
-  Pic: SSH Connection Initialization
-</p>
+
 
 **Here is the detailed steps:**
 
